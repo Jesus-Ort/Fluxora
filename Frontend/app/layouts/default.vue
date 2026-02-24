@@ -16,10 +16,11 @@
             aria-label="Donate"
             />
         </UTooltip>
+        
         <!-- Menú -->
         <UDropdownMenu
             arrow
-            size="xl"
+            size="lg"
             :items="items"
             :ui="{
             content: 'w-48'
@@ -55,24 +56,24 @@ const items: DropdownMenuItem[][] = [
         {
         label: 'Dashboard',
         icon: 'i-heroicons-squares-2x2',
-        to: '/dashboard'
+        to: '/DashboardPage'
         },
         {
         label: 'Transactions',
         icon: 'i-heroicons-arrows-right-left',
-        to: '/transactions'
+        to: '/TransactionsPage'
         },
         {
         label: 'Categories',
         icon: 'i-heroicons-tag',
-        to: '/categories'
+        to: '/CategoriesPage'
         }
     ],
     [
         {
         label: 'Settings',
         icon: 'i-heroicons-cog-6-tooth',
-        to: '/settings'
+        to: '/SettingsPage'
         }
     ],
     [
