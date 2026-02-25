@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto border border-primary-300 dark:border-secondary-300 rounded-2xl shadow-sm p-6 bg-primary-500/5 dark:bg-secondary-500/5">
+  <div class="mt-10 max-w-6xl mx-auto border border-primary-300 dark:border-secondary-300 rounded-2xl shadow-sm p-6 bg-primary-500/5 dark:bg-secondary-500/5">
     
     <div class="flex justify-center mb-6">
       <UInput
