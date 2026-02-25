@@ -1,5 +1,5 @@
 <template>
-    <UHeader title="Fluxora">
+    <UHeader title="Fluxora" to="/HomePage">
         <template #right>
 
         <!-- Dark mode -->
@@ -51,12 +51,7 @@ const items: DropdownMenuItem[][] = [
         {
         label: 'Home',
         icon: 'i-heroicons-home',
-        to: '/'
-        },
-        {
-        label: 'Dashboard',
-        icon: 'i-heroicons-squares-2x2',
-        to: '/DashboardPage'
+        to: '/HomePage'
         },
         {
         label: 'Transactions',
