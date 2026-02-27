@@ -3,7 +3,10 @@
         <template #right>
 
         <!-- Dark mode -->
-        <UColorModeButton/>
+        
+        <UTooltip text="Color mode">
+            <UColorModeButton/>
+        </UTooltip>
 
         <!-- Donate -->
         <UTooltip text="Donate">
@@ -51,24 +54,24 @@ const items: DropdownMenuItem[][] = [
         {
         label: 'Home',
         icon: 'i-heroicons-home',
-        to: '/HomePage'
+        to: '/home'
         },
         {
         label: 'Transactions',
         icon: 'i-heroicons-arrows-right-left',
-        to: '/TransactionsPage'
+        to: '/transactions'
         },
         {
         label: 'Categories',
         icon: 'i-heroicons-tag',
-        to: '/CategoriesPage'
+        to: '/categories'
         }
     ],
     [
         {
         label: 'Settings',
         icon: 'i-heroicons-cog-6-tooth',
-        to: '/SettingsPage'
+        to: '/settings'
         }
     ],
     [

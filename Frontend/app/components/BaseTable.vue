@@ -1,7 +1,7 @@
 <template>
   <div class="mt-10 max-w-6xl mx-auto border border-primary-300 dark:border-secondary-300 rounded-2xl shadow-sm p-6 bg-primary-500/5 dark:bg-secondary-500/5">
     
-    <div class="flex justify-center mb-6">
+    <div class="flex items-center-center mb-6 gap-4">
       <UInput
         icon="i-lucide-search"
         v-model="globalFilter"
@@ -9,6 +9,11 @@
         color="secondary"
         placeholder="Filter..."
       />
+      <!-- Slot para boton agregar -->
+      <div class="ml-auto flex items-center gap-2">
+        <slot name="agregar" />
+      </div>
+
     </div>
 
     <div class="overflow-x-auto ">

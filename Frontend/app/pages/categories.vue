@@ -1,13 +1,24 @@
 <template>
   <UContainer>
     <h2 class="text-2xl text-center mx-auto mt-10">Categories</h2>
+    
     <BaseTable
       :data="data"
       :columns="columns"
       :loading="pending"
-    />
+    >  
+      <template #agregar>
+        <UTooltip text="Add new category">
+          <UButton
+          icon="i-heroicons-plus-small-solid"
+          color="primary"
+          />
+        </UTooltip>
+      </template>
+    </BaseTable>
   </UContainer>
 </template>
+
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
