@@ -1,5 +1,5 @@
 <template>
-    <UHeader title="Fluxora" to="/HomePage">
+    <UHeader title="Fluxora" to="/home">
         <template #right>
 
         <!-- Dark mode -->
