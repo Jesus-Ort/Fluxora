@@ -20,6 +20,22 @@
             />
         </UTooltip>
         
+        <!-- Sign Up -->
+        <UButton
+            color="neutral"
+            variant="solid"
+            to="/register"
+            aria-label="Sign Up"
+        >Sign Up</UButton>
+
+        <!-- Log in -->
+        <UButton
+            color="neutral"
+            variant="ghost"
+            to="/login"
+            aria-label="Log in"
+        >Log in</UButton>
+
         <!-- Menú -->
         <UDropdownMenu
             arrow
