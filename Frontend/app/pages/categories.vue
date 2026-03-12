@@ -1,6 +1,6 @@
 <template>
   <UContainer>
-    <h2 class="text-2xl text-center mx-auto mt-10">Categories</h2>
+    <h2 class="text-2xl text-center mx-auto mt-10">Categorías</h2>
     
     <BaseTable
       :data="data"
@@ -8,7 +8,7 @@
       :loading="pending"
     >  
       <template #agregar>
-        <UTooltip text="Add new category">
+        <UTooltip text="Agregar nueva categoría">
           <UButton
           icon="i-heroicons-plus-small-solid"
           color="primary"
@@ -49,11 +49,11 @@ onMounted(async () => {
 const columns: TableColumn<Categorie>[] = [
   {
     accessorKey: 'type',
-    header: 'Type'
+    header: 'Tipo'
   },
   {
     accessorKey: 'name',
-    header: 'Name'
+    header: 'Nombre'
   }
 ]
 </script>

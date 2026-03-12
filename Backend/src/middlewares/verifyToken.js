@@ -8,7 +8,7 @@ export const verifyToken = async (req, res, next) => {
         const { data, error } = await supabase.auth.getUser(token)
         if (error) return res.status(401).json({ error: 'Error verificando token', details: error.message })
         if (!data.user) return res.status(401).json({ error: 'Token expirado o inválido' })
-
+        
         req.user = data.user
         next()
     } catch (err) {

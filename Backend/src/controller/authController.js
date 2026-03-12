@@ -30,7 +30,7 @@ export const register = async (req, res) => {
         });
 
         if (authError) {
-            return res.status(400).json({ message: 'Error al registrar en Supabase Auth', error: authError.message });
+            return res.status(400).json({ message: authError.message, error: authError.message });
         }
 
         const user_id = authData.user?.id;
@@ -84,47 +84,17 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: 'Usuario no tiene sesión activa o no ha confirmado correo' })
         }
 
-        const { data: profile } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", data.user.id)
-        .single();
-
-
         res.json({
             message: 'Inicio de sesión exitoso',
             access_token: data.session.access_token,
             refresh_token: data.session.refresh_token,
-            user: {
-                id: data.user.id,
-                email: data.user.email
-            },
-            profile
         })
     } catch (err) {
     res.status(500).json({ error: err.message })
     }
 }
 
-// LOGOUT
-export const logout = async (req, res) => {
-    try {
-        const token = req.headers.authorization?.replace('Bearer ', '')
-
-        if (!token) return res.status(401).json({ error: 'Token requerido' })
-        
-        const {error} = await supabase.auth.signOut()
-
-        if (error){
-            return res.status(400).json({error: 'Error cerrando sesión', details: error.message })
-        }
-
-        res.json({ message: 'Sesión cerrada correctamente' })
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-}
-
+// Refresh token
 export const refreshToken = async (req, res) => {
     try {
         const { refresh_token } = req.body

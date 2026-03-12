@@ -1,5 +1,5 @@
 <template>
   <div>
-    <h2>Settings</h2>
+    <h2>Configuración</h2>
   </div>
 </template>

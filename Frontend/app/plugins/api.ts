@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-export default function useApi() {
-    const baseURL = import.meta.env.NUXT_PUBLIC_API_URL
+export default defineNuxtPlugin(() => {
+    const config = useRuntimeConfig()
 
     const api = axios.create({
-        baseURL,
+        baseURL: config.public.apiUrl,
         headers: { 'Content-Type': 'application/json' }
     })
 
@@ -29,7 +29,10 @@ export default function useApi() {
         res => res,
         async (error) => {
         const originalRequest = error.config
-        if (error.response?.status !== 401) return Promise.reject(error)
+
+        if (error.response?.status !== 401) {
+            return Promise.reject(error)
+        }
 
         if (isRefreshing) {
             return new Promise((resolve, reject) => {
@@ -41,6 +44,7 @@ export default function useApi() {
         }
 
         isRefreshing = true
+
         const refreshToken = localStorage.getItem('refresh_token')
 
         if (!refreshToken) {
@@ -50,26 +54,40 @@ export default function useApi() {
         }
 
         try {
-            const res = await axios.post(`${baseURL}/api/v1/auth/refresh`, { refresh_token: refreshToken })
-            const { access_token: newAccess, refresh_token: newRefresh } = res.data
+            const res = await axios.post(
+            `${config.public.apiUrl}/api/v1/auth/refresh`,
+            { refresh_token: refreshToken }
+            )
 
-            localStorage.setItem('access_token', newAccess)
-            if (newRefresh) localStorage.setItem('refresh_token', newRefresh)
+            const { access_token, refresh_token } = res.data
 
-            processQueue(null, newAccess)
+            localStorage.setItem('access_token', access_token)
+            if (refresh_token) {
+            localStorage.setItem('refresh_token', refresh_token)
+            }
 
-            originalRequest.headers.Authorization = `Bearer ${newAccess}`
+            processQueue(null, access_token)
+
+            originalRequest.headers.Authorization = `Bearer ${access_token}`
             return api(originalRequest)
+
         } catch (err) {
             processQueue(err, null)
+
             localStorage.removeItem('access_token')
             localStorage.removeItem('refresh_token')
+
             return Promise.reject(err)
+
         } finally {
             isRefreshing = false
         }
         }
     )
 
-    return api
-}
+    return {
+        provide: {
+        api
+        }
+    }
+})

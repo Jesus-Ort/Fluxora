@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-6xl mx-auto mt-10 px-4">
     
-    <h2 class="text-2xl font-semibold mb-6">Home</h2>
+    <h2 class="text-2xl font-semibold mb-6">Inicio</h2>
 
     <UCard>
       <div class="flex flex-col lg:flex-row gap-4 lg:items-end">
@@ -10,7 +10,7 @@
         <USelect
           v-model="type"
           :items="typeOptions"
-          placeholder="Type"
+          placeholder="Tipo"
           class="lg:w-40"
           portal
         />
@@ -19,7 +19,7 @@
         <USelect
           v-model="category"
           :items="categories"
-          placeholder="Category"
+          placeholder="Categoria"
           class="lg:w-52"
           portal
         />
@@ -28,26 +28,25 @@
         <UInput
           v-model.number="amount"
           type="number"
-          placeholder="Amount"
+          placeholder="Monto"
           class="lg:w-40"
         />
 
         <!-- Descripción -->
         <UInput
           v-model="description"
-          placeholder="Description"
+          placeholder="Descripción"
           class="flex-1"
         />
 
         <!-- Botón -->
         <UButton
           color="primary"
-          icon="i-heroicons-plus-small-solid"
           class="lg:w-auto w-full"
           :disabled="!isValid"
           @click="handleAdd"
         >
-          Add
+          Agregar
         </UButton>
 
       </div>
@@ -58,11 +57,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 
+const { $api } = useNuxtApp()
+
 const type = ref<string | null>(null)
 
 const typeOptions = [
-  { label: 'Income', value: 'income' },
-  { label: 'Expense', value: 'expense' }
+  { label: 'Ingreso', value: 'income' },
+  { label: 'Gasto', value: 'expense' }
 ]
 
 const categories = ref([
@@ -103,4 +104,13 @@ function handleAdd() {
   amount.value = null
   description.value = ''
 }
+
+onMounted(async () => {
+  try {
+    await $api.get('/test')
+  } catch (err) {
+
+  } 
+})
+
 </script>

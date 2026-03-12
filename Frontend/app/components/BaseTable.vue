@@ -7,7 +7,7 @@
         v-model="globalFilter"
         class="w-full max-w-md"
         color="secondary"
-        placeholder="Filter..."
+        placeholder="Filtrar..."
       />
       <!-- Slot para boton agregar -->
       <div class="ml-auto flex items-center gap-2">

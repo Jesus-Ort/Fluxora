@@ -1,6 +1,6 @@
 <template>
   <UContainer>
-    <h2 class="text-2xl text-center mx-auto mt-10">Transactions</h2>
+    <h2 class="text-2xl text-center mx-auto mt-10">Transacciones</h2>
     <BaseTable
       :data="data"
       :columns="columns"
@@ -41,26 +41,26 @@ onMounted(async () => {
 const columns: TableColumn<Transaction>[] = [
   {
     accessorKey: 'category',
-    header: 'Category'
+    header: 'Categoria'
   },
   {
     accessorKey: 'type',
-    header: 'Type'
+    header: 'Tipo'
   },
   {
     accessorKey: 'amount',
-    header: 'Amount'
+    header: 'Monto'
   },
   {
     accessorKey: 'date',
-    header: 'Date',
+    header: 'Fecha',
       cell: ({ row }) => {
     return new Date(row.getValue('date')).toLocaleDateString()
   }
   },
   {
     accessorKey: 'description',
-    header: 'Description'
+    header: 'Descripción'
   },
   ]
 </script>

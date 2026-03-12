@@ -1,53 +1,62 @@
 <template>
-    <UHeader title="Fluxora" to="/home">
+    <UHeader title="Fluxora" to="/home" :toggle="false">
         <template #right>
 
         <!-- Dark mode -->
-        
-        <UTooltip text="Color mode">
+        <UTooltip text="Modo de color">
             <UColorModeButton/>
         </UTooltip>
 
         <!-- Donate -->
-        <UTooltip text="Donate">
+        <UTooltip text="Donar">
             <UButton
             color="neutral"
             variant="ghost"
             to="#"
             target="_blank"
             icon="i-heroicons-heart"
-            aria-label="Donate"
             />
         </UTooltip>
         
-        <!-- Sign Up -->
+        <!-- si NO hay sesión -->
+        <!-- Registro -->
         <UButton
+            v-if="!isLogged"
             color="neutral"
             variant="solid"
             to="/register"
-            aria-label="Sign Up"
-        >Sign Up</UButton>
+        >
+            Regístrate
+        </UButton>
 
-        <!-- Log in -->
+        <!-- Login -->
         <UButton
+            v-if="!isLogged"
             color="neutral"
             variant="ghost"
             to="/login"
-            aria-label="Log in"
-        >Log in</UButton>
+        >
+            Iniciar sesión
+        </UButton>
 
+        <!-- si hay sesión -->
         <!-- Menú -->
         <UDropdownMenu
+            v-if="isLogged"
             arrow
             size="lg"
             :items="items"
-            :ui="{
-            content: 'w-48'
-            }">
-            <UButton icon="i-heroicons-bars-3" color="neutral" variant="outline" aria-label="Menú" />
+            :ui="{ content: 'w-48' }"
+        >
+            <UButton
+            icon="i-heroicons-user"
+            color="neutral"
+            variant="outline"
+            />
         </UDropdownMenu>
 
         </template>
+
     </UHeader>
 
     <UMain>
@@ -64,41 +73,47 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
+import { useAuth } from '~/composables/useAuth'
+
+const { isLogged, checkAuth, logout } = useAuth()
 
 const items: DropdownMenuItem[][] = [
     [
         {
-        label: 'Home',
+        label: 'Inicio',
         icon: 'i-heroicons-home',
         to: '/home'
         },
         {
-        label: 'Transactions',
+        label: 'Transacciones',
         icon: 'i-heroicons-arrows-right-left',
         to: '/transactions'
         },
         {
-        label: 'Categories',
+        label: 'Categorías',
         icon: 'i-heroicons-tag',
         to: '/categories'
         }
     ],
     [
         {
-        label: 'Settings',
+        label: 'Configuración',
         icon: 'i-heroicons-cog-6-tooth',
         to: '/settings'
         }
     ],
     [
         {
-        label: 'Log out',
+        label: 'Cerrar sesión',
         icon: 'i-heroicons-arrow-left-on-rectangle',
         color: 'error',
-        onSelect: () => {
-            console.log('Logout logic here')
-        }
+        onSelect:  logout
         }
     ]
 ]
+
+onMounted(() => {
+    checkAuth()
+})
+
 </script>
