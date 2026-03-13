@@ -77,6 +77,7 @@ import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 import { useAuth } from '~/composables/useAuth'
 
 const { $api } = useNuxtApp()
+const toast = useToast()
 
 const loading = ref(false)
 
@@ -99,8 +100,6 @@ const state = reactive({
     email: '',
     password: '',
 })
-
-const toast = useToast()
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
     try {

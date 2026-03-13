@@ -8,12 +8,21 @@
       :loading="pending"
     >  
       <template #agregar>
-        <UTooltip text="Agregar nueva categoría">
+        <UTooltip text="Agregar">
+
           <UButton
-          icon="i-heroicons-plus-small-solid"
-          color="primary"
+            icon="i-heroicons-plus"
+            color="primary"
+            @click="open = true"
           />
+
         </UTooltip>
+
+        <CreateCategoryModal
+          v-model:open="open"
+          @created="loadCategories"
+        />
+
       </template>
     </BaseTable>
   </UContainer>
@@ -22,29 +31,19 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
-
+import CreateCategoryModal from '~/components/CreateCategoryModal.vue'
 
 type Categorie = {
-  type: 'income' | 'expense'
+  type: 'Income' | 'Expense'
   name: string
 }
 
+const open = ref(false)
 const { $api } = useNuxtApp()
 
 const data = ref<Categorie[]>([])
 const pending = ref(true)
-const error = ref<unknown>(null)
-
-onMounted(async () => {
-  try {
-  const response = await $api.get<Categorie[]>('/categories')
-  data.value = response.data
-  } catch (err) {
-    error.value = err
-  } finally {
-    pending.value = false
-  }
-})
+const loading = ref(true)
 
 const columns: TableColumn<Categorie>[] = [
   {
@@ -56,4 +55,19 @@ const columns: TableColumn<Categorie>[] = [
     header: 'Nombre'
   }
 ]
+
+const loadCategories = async () => {
+
+  loading.value = true
+
+  const res =
+    await $api.get('/categories')
+
+  data.value = res.data
+
+  loading.value = false
+}
+
+onMounted(loadCategories)
+
 </script>
