@@ -59,7 +59,7 @@ const emit = defineEmits(['created'])
 const { $api } = useNuxtApp()
 const toast = useToast()
 
-const open = ref(false)
+const open = defineModel<boolean>('open')
 const loading = ref(false)
 
 const typeOptions = [

@@ -51,7 +51,8 @@ const pending = ref(true)
 const columns: TableColumn<Category>[] = [
   {
     accessorKey: 'type',
-    header: 'Tipo'
+    header: 'Tipo',
+    cell: ({ row }) => (row.type === 'Income' ? 'Gasto' : 'Ingreso' ),
   },
   {
     accessorKey: 'name',

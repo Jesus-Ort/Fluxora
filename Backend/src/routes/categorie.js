@@ -5,7 +5,7 @@ const router = Router();
 
 // Crear categorias
 router.post("/categories", createCategorie);
-// Cargar caegorias
+// Cargar categorias
 router.get("/categories", getCategories);
 
 export default router;

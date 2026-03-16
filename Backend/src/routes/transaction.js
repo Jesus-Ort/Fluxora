@@ -3,9 +3,9 @@ import { createTransaction, getTransactions } from "../controller/transactionCon
 
 const router = Router();
 
-// Crear categorias
+// Crear transacciones
 router.post("/transactions", createTransaction);
-// Cargar caegorias
+// Cargar transacciones
 router.get("/transactions", getTransactions);
 
 export default router;

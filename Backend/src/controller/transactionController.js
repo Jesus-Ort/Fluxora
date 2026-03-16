@@ -70,7 +70,7 @@ export const getTransactions = async (req, res) => {
         .select(`
         id,
         profiles ( full_name ),
-        categories ( name ),
+        categories ( name, type ),
         amount,
         description,
         transaction_date

@@ -67,7 +67,12 @@ const columns: TableColumn<Transaction>[] = [
   },
   {
     accessorKey: 'categories.name',
-    header: 'Categoria'
+    header: 'Categoría'
+  },
+  {
+    accessorKey: 'categories.type',
+    header: 'Tipo',
+    cell: ({ row }) => (row.type === 'Income' ? 'Gasto' : 'Ingreso' ),
   },
   {
     accessorKey: 'amount',
