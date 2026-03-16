@@ -83,8 +83,8 @@ export const login = async (req, res) => {
         if (error) {
         console.error(error)
 
-        return res.status(500).json({
-            message: "Internal server error"
+        return res.status(401).json({
+            message: "Credenciales inválidas"
         })
         }
 
