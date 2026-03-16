@@ -55,7 +55,10 @@ const loading = ref(false)
 const state = reactive<{ email: string }>({ email: '' })
 
 const schema = yup.object({
-    email: yup.string().email('Correo inválido').required('Requerido')
+    email: yup
+    .string()
+    .email('Correo electrónico no válido')
+    .required('Se requiere correo electrónico')
     })
 
     async function onSubmit(event: FormSubmitEvent<any>) {

@@ -67,10 +67,16 @@ const state = reactive<{ newPassword: string; confirmPassword: string }>({
 })
 
 const schema = yup.object({
-    newPassword: yup.string().min(6, 'Mínimo 6 caracteres').required('Requerido'),
-    confirmPassword: yup.string()
-        .oneOf([yup.ref('newPassword')], 'Las contraseñas no coinciden')
-        .required('Requerido')
+    newPassword: yup
+    .string()
+    .min(6, 'Mínimo 6 caracteres')
+    .matches(/^[^<>[\]{}^`]+$/, 'No se permiten los caracteres < > [ ] { } ` ^')
+    .required('Requerido'),
+    confirmPassword: yup
+    .string()
+    .matches(/^[^<>[\]{}^`]+$/, 'No se permiten los caracteres < > [ ] { } ` ^')
+    .oneOf([yup.ref('newPassword')], 'Las contraseñas no coinciden')
+    .required('Requerido')
 })
 
 async function onSubmit(event: FormSubmitEvent<any>) {

@@ -71,7 +71,7 @@ export const updateUserName = async (req, res) => {
         return res.status(500).json({ message: "Error actualizando el nombre del usuario" });
         }
 
-        res.json({ message: "Nombre del usuario actualizado correctamente", user: data });
+        res.json({ message: "Nombre del usuario actualizado correctamente"});
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Error interno del servidor" });
@@ -85,9 +85,14 @@ export const updateSavingPercentage = async (req, res) => {
         return res.status(401).json({ message: "Usuario no autenticado" });
         }
 
-        const { saving_percentage } = req.body;
-        if (!saving_percentage) {
-        return res.status(400).json({ message: "El porcentaje de ahorro es obligatorio" });
+        if (saving_percentage === undefined || saving_percentage === null){
+            return res.status(400).json({message: 'El porcentaje es obligatorio'});
+        }
+
+        if (saving_percentage < 0 || saving_percentage > 100) {
+            return res.status(400).json({
+                message: 'El porcentaje debe estar entre 0 y 100'
+            });
         }
 
         const { data, error } = await supabase
@@ -100,7 +105,7 @@ export const updateSavingPercentage = async (req, res) => {
         return res.status(500).json({ message: "Error actualizando el porcentaje de ahorro" });
         }
 
-        res.json({ message: "Porcentaje de ahorro actualizado correctamente", user: data });
+        res.json({ message: "Porcentaje de ahorro actualizado correctamente"});
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Error interno del servidor" });

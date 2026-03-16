@@ -138,6 +138,7 @@ const schema = yup.object({
     .required('Se requiere un monto'),
     description: yup
     .string()
+    .matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo se permiten letras y espacios')
     .trim()
     .min(3, 'Mínimo 3 caracteres')
     .max(100, 'Máximo 100 caracteres')
