@@ -33,19 +33,22 @@ import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
 import CreateCategoryModal from '~/components/CreateCategoryModal.vue'
 
-type Categorie = {
-  type: 'Income' | 'Expense'
+type Category = {
+  id: string
+  user_id: string
   name: string
+  type: 'Income' | 'Expense'
+  created_at: string
 }
 
 const open = ref(false)
 const { $api } = useNuxtApp()
 
-const data = ref<Categorie[]>([])
+const data = ref<Category[]>([])
 const pending = ref(true)
-const loading = ref(true)
 
-const columns: TableColumn<Categorie>[] = [
+
+const columns: TableColumn<Category>[] = [
   {
     accessorKey: 'type',
     header: 'Tipo'
@@ -57,15 +60,23 @@ const columns: TableColumn<Categorie>[] = [
 ]
 
 const loadCategories = async () => {
+  try {
 
-  loading.value = true
+    pending.value = true
 
-  const res =
-    await $api.get('/categories')
+    const res = await $api.get('/api/v1/categories')
 
-  data.value = res.data
+    data.value = res.data.categories
 
-  loading.value = false
+  } catch (err) {
+
+    console.error(err)
+
+  } finally {
+
+    pending.value = false
+
+  }
 }
 
 onMounted(loadCategories)

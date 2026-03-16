@@ -56,7 +56,11 @@ export const register = async (req, res) => {
         message: 'Registro exitoso. Revisa tu correo para confirmar la cuenta.',
         });
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        console.error(err)
+
+        res.status(500).json({
+            message: "Internal server error"
+        })
     }
 }
 
@@ -77,7 +81,11 @@ export const login = async (req, res) => {
         })        
 
         if (error) {
-                return res.status(401).json({message: 'Error al iniciar sesión', error: error.message });
+        console.error(error)
+
+        return res.status(500).json({
+            message: "Internal server error"
+        })
         }
 
         if (!data.session) {
@@ -90,7 +98,11 @@ export const login = async (req, res) => {
             refresh_token: data.session.refresh_token,
         })
     } catch (err) {
-    res.status(500).json({ error: err.message })
+        console.error(err)
+
+        res.status(500).json({
+            message: "Internal server error"
+        })
     }
 }
 
@@ -109,7 +121,11 @@ export const refreshToken = async (req, res) => {
         })
 
         if (error) {
-        return res.status(401).json({ error: error.message })
+        console.error(error)
+
+        return res.status(500).json({
+            message: "Internal server error"
+        })
         }
 
         return res.json({
@@ -121,6 +137,10 @@ export const refreshToken = async (req, res) => {
         })
 
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        console.error(err)
+
+        res.status(500).json({
+            message: "Internal server error"
+        })
     }
 }

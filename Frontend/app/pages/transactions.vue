@@ -1,66 +1,111 @@
 <template>
   <UContainer>
     <h2 class="text-2xl text-center mx-auto mt-10">Transacciones</h2>
+    
     <BaseTable
       :data="data"
       :columns="columns"
       :loading="pending"
-    />
+    >  
+      <template #agregar>
+        <UTooltip text="Agregar">
+
+          <UButton
+            icon="i-heroicons-plus"
+            color="primary"
+            @click="open = true"
+          />
+
+        </UTooltip>
+
+        <CreateTransactionModal
+          v-model:open="open"
+          @created="loadTransactions"
+        />
+
+      </template>
+    </BaseTable>
   </UContainer>
 </template>
 
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
+import CreateTransactionModal from '~/components/CreateTransactionModal.vue'
 
 type Transaction = {
-  category: string
-  type: 'income' | 'expense'
+  id: string
+  users: {
+    name: string
+  }
+  categories: {
+    name: string
+  }
   amount: number
-  date: string
   description: string
+  transaction_date: string
 }
 
+const open = ref(false)
 const { $api } = useNuxtApp()
 
 const data = ref<Transaction[]>([])
 const pending = ref(true)
-const error = ref<unknown>(null)
 
-onMounted(async () => {
-  try {
-  const response = await $api.get<Transaction[]>('/transactions')
-  data.value = response.data
-  } catch (err) {
-    error.value = err
-  } finally {
-    pending.value = false
-  }
-})
+const formatDate = (date: string) => {
+  return new Intl.DateTimeFormat('es-ES', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).format(new Date(date))
+}
 
 const columns: TableColumn<Transaction>[] = [
   {
-    accessorKey: 'category',
-    header: 'Categoria'
+    accessorKey: 'profiles.full_name',
+    header: 'Usuario'
   },
   {
-    accessorKey: 'type',
-    header: 'Tipo'
+    accessorKey: 'categories.name',
+    header: 'Categoria'
   },
   {
     accessorKey: 'amount',
     header: 'Monto'
   },
   {
-    accessorKey: 'date',
-    header: 'Fecha',
-      cell: ({ row }) => {
-    return new Date(row.getValue('date')).toLocaleDateString()
-  }
-  },
-  {
     accessorKey: 'description',
     header: 'Descripción'
   },
-  ]
+  {
+    accessorKey: 'transaction_date',
+    header: 'Fecha',
+    cell: ({ row }) => {
+      return formatDate(row.original.transaction_date)
+    }
+  }
+]
+
+const loadTransactions = async () => {
+  try {
+
+    pending.value = true
+
+    const res = await $api.get('/api/v1/transactions')
+
+    data.value = res.data.transactions
+
+  } catch (err) {
+
+    console.error(err)
+
+  } finally {
+
+    pending.value = false
+
+  }
+}
+
+onMounted(loadTransactions)
+
 </script>

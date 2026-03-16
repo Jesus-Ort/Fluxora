@@ -4,6 +4,8 @@ import cors from 'cors'
 import { verifyToken } from './middlewares/verifyToken.js'
 
 import authRoutes from "./routes/auth.js";
+import categorieRoutes from "./routes/categorie.js"
+import transactionRoutes from "./routes/transaction.js"
 
 const PORT = process.env.PORT || 3001
 const app = express()
@@ -18,6 +20,8 @@ app.get('/test', verifyToken , (req, res) => {
 
 // Rutas
 app.use("/api/v1/auth", authRoutes); 
+app.use("/api/v1/", verifyToken, categorieRoutes); 
+app.use("/api/v1/", verifyToken, transactionRoutes); 
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`)

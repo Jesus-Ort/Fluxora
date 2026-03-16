@@ -94,7 +94,7 @@ async function onSubmit(
 
         loading.value = true
 
-        await $api.post('/categories', event.data)
+        await $api.post('/api/v1/categories', event.data)
 
         toast.add({
         title: 'Categoría creada',
