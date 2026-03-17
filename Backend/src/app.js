@@ -16,7 +16,7 @@ app.use(cors())
 app.use(express.json())
 
 // Test
-app.get('/test', verifyToken , (req, res) => {
+app.get('/test', (req, res) => {
     res.send('Api funcionando!')
 })
 
