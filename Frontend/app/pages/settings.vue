@@ -95,6 +95,9 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+    title: 'Configuración'
+})
 import auth from '../middlewares/auth'
 definePageMeta({
   middleware: auth

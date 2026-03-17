@@ -29,6 +29,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'Categorias'
+})
+
 import auth from '../middlewares/auth'
 definePageMeta({
   middleware: auth

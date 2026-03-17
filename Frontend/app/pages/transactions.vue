@@ -29,6 +29,9 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+    title: 'Transacciones'
+})
 import auth from '../middlewares/auth'
 definePageMeta({
   middleware: auth
