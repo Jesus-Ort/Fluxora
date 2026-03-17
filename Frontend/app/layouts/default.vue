@@ -12,9 +12,9 @@
             <UButton
             color="neutral"
             variant="ghost"
-            to="#"
+            to="https://ko-fi.com/jesusort"
             target="_blank"
-            icon="i-heroicons-heart"
+            icon="i-simple-icons-kofi"
             />
         </UTooltip>
         
