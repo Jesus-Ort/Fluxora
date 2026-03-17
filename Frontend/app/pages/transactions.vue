@@ -81,7 +81,7 @@ const columns: TableColumn<Transaction>[] = [
     accessorKey: 'categories.type',
     header: 'Tipo',
     cell: ({ row }) => {
-      const type = row.getValue('type') as string || row.original?.type
+      const type = (row.getValue('categories.type') as string) || row.original?.categories?.type
       return type === 'Income' ? 'Ingreso' : 'Gasto'
     },
   },
