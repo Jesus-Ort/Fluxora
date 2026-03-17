@@ -187,8 +187,8 @@ async function onSubmit(
         await $api.post('/api/v1/transactions', event.data)
 
         toast.add({
-        title: 'Categoría creada',
-        description: 'Ahora puedes usar la nueva categoría.',
+        title: 'Transacción creada',
+        description: 'Se ah registrado tu transacción.',
         color: 'success'
         })
 
