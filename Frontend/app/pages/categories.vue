@@ -61,7 +61,10 @@ const columns: TableColumn<Category>[] = [
   {
     accessorKey: 'type',
     header: 'Tipo',
-    cell: ({ row }) => (row.type === 'Income' ? 'Gasto' : 'Ingreso' ),
+    cell: ({ row }) => {
+      const type = row.getValue('type') as string || row.original?.type
+      return type === 'Income' ? 'Ingreso' : 'Gasto'
+    },
   },
   {
     accessorKey: 'name',
