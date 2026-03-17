@@ -29,6 +29,11 @@
 </template>
 
 <script setup lang="ts">
+import auth from '../middlewares/auth'
+definePageMeta({
+  middleware: auth
+})
+
 import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
 import CreateCategoryModal from '~/components/CreateCategoryModal.vue'

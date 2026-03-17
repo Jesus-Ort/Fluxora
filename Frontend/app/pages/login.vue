@@ -66,9 +66,10 @@
 </template>
 
 <script setup lang="ts">
-// definePageMeta({
-//     layout: 'auth'
-// })
+import guest from '../middlewares/guest'
+definePageMeta({
+    middleware: guest
+})
 
 import * as yup from 'yup'
 import type { InferType } from 'yup'

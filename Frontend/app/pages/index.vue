@@ -6,7 +6,9 @@
     :links="links"
   />
 
-  <UContainer class="py-12">
+  <USeparator />
+
+  <UContainer class="py-12 mb-8">
 
     <h2 class="text-2xl font-semibold text-center mb-6">
       Qué puedes hacer con Fluxora
@@ -47,6 +49,7 @@
 
   <UPageLogos
   title="Tecnologías usadas"
+  class="mt-8 mb-8"
   marquee
   :items="[
     'i-simple-icons-nodedotjs',
@@ -58,9 +61,16 @@
   ]"
   />
 
+  <USeparator />
+
 </template>
 
 <script setup lang="ts">
+import guest from '../middlewares/guest'
+definePageMeta({
+    middleware: guest
+})
+
 import type { ButtonProps } from '@nuxt/ui'
 
 const links = ref<ButtonProps[]>([

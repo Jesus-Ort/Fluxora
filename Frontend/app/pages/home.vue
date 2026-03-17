@@ -142,6 +142,11 @@
 </template>
 
 <script setup lang="ts">
+import auth from '../middlewares/auth'
+definePageMeta({
+  middleware: auth
+})
+
 import { ref, onMounted, computed } from 'vue'
 import { useNuxtApp } from '#app'
 import CreateTransactionModal from '~/components/CreateTransactionModal.vue'

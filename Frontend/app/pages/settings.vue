@@ -95,6 +95,10 @@
 </template>
 
 <script setup lang="ts">
+import auth from '../middlewares/auth'
+definePageMeta({
+  middleware: auth
+})
 
 import UpdateUserNameModal from '~/components/UpdateUserNameModal.vue'
 import UpdateSavingPercentageModal from '~/components/UpdateSavingPercentageModal.vue'
