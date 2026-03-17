@@ -1,5 +1,5 @@
 <template>
-    <UHeader title="Fluxora" to="/home" :toggle="false">
+    <UHeader title="Fluxora" to="/" :toggle="false">
         <template #right>
 
         <!-- Dark mode -->
@@ -8,7 +8,7 @@
         </UTooltip>
 
         <!-- Donate -->
-        <UTooltip text="Donar">
+        <UTooltip text="¡Regálame un café!">
             <UButton
             color="neutral"
             variant="ghost"
