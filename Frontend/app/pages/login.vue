@@ -31,12 +31,22 @@
                 </UFormField>
     
                 <UFormField label="Contraseña" name="password">
-                    <UInput 
-                    class="w-full"
-                    placeholder="Ingresa tu contraseña" 
-                    v-model="state.password" 
-                    type="password" 
-                    />
+                    <div class="relative">
+                        <UInput 
+                        class="w-full"
+                        :type="showPassword ? 'text' : 'password'"
+                        placeholder="Ingresa tu contraseña" 
+                        v-model="state.password" 
+                        />
+                        <button
+                            type="button"
+                            aria-label="Mostrar u ocultar contraseña"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            @click="showPassword = !showPassword"
+                        >
+                            <UIcon :name="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" size="18" />
+                        </button>
+                    </div>
                 </UFormField>
     
                 <UButton 
@@ -81,6 +91,7 @@ const { $api } = useNuxtApp()
 const toast = useToast()
 
 const loading = ref(false)
+const showPassword = ref(false)
 
 // Esquema Yup
 const schema = yup.object({
