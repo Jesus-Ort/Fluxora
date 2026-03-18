@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createTransaction, getTransactions } from "../controller/transactionController.js";
+import { createTransaction, getTransactions, deleteTransaction } from "../controller/transactionController.js";
 
 const router = Router();
 
@@ -7,5 +7,7 @@ const router = Router();
 router.post("/transactions", createTransaction);
 // Cargar transacciones
 router.get("/transactions", getTransactions);
+// Eliminar transacciones (soft)
+router.patch("/transactions/:id", deleteTransaction);
 
 export default router;

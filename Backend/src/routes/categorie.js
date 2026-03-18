@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createCategorie, getCategories } from "../controller/categorieController.js";
+import { createCategorie, getCategories, deleteCategorie } from "../controller/categorieController.js";
 
 const router = Router();
 
@@ -7,5 +7,7 @@ const router = Router();
 router.post("/categories", createCategorie);
 // Cargar categorias
 router.get("/categories", getCategories);
+// Eliminar categorias (soft)
+router.patch("/categories/:id", deleteCategorie);
 
 export default router;

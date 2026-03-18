@@ -76,6 +76,7 @@ export const getTransactions = async (req, res) => {
         transaction_date
         `)
         .eq("user_id", user_id)
+        .eq("isactive", true)
         .order("created_at", { ascending: false })
 
 
@@ -89,6 +90,48 @@ export const getTransactions = async (req, res) => {
 
         res.json({
             transactions: data
+        })
+    } catch (err) {
+        console.error(err)
+
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
+// Editar Transaccion
+
+// Eliminar Transaccion
+export const deleteTransaction = async (req, res) => {
+    try {
+        
+        if(!req.user){
+            return res.status(401).json({
+                message: "Usuario no autenticado"
+            });
+        }
+        
+        const { id } = req.params
+        if (!id) return res.status(400).json({ message: "Se necesita el ID de la transacción." })
+
+        const {data, error} = await supabase
+        .from("transactions")
+        .update({ isactive: false })
+        .eq("id", id)
+        .eq("user_id", req.user.id)
+        .select()
+
+        if (error) {
+        console.error(error)
+
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+        }
+
+        res.json({
+            message: "La transacción ha sido eliminada."
         })
     } catch (err) {
         console.error(err)
