@@ -47,12 +47,41 @@
                 </UFormField>
     
                 <UFormField label="Contraseña" name="password">
-                    <UInput 
-                    class="w-full"
-                    placeholder="Ingresa tu contraseña" 
-                    v-model="state.password" 
-                    type="password" 
-                    />
+                    <div class="relative">
+                        <UInput 
+                        class="w-full"
+                        :type="showPassword ? 'text' : 'password'"
+                        placeholder="Ingresa tu contraseña" 
+                        v-model="state.password" 
+                        />
+                        <button
+                            type="button"
+                            aria-label="Mostrar u ocultar contraseña"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            @click="showPassword = !showPassword"
+                        >
+                            <UIcon :name="showPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" size="18" />
+                        </button>
+                    </div>
+                </UFormField>
+
+                <UFormField label="Confirmar Contraseña" name="confirm_password">
+                    <div class="relative">
+                        <UInput
+                        class="w-full"
+                        :type="showConfirmPassword ? 'text' : 'password'"
+                        placeholder="Repite tu contraseña"
+                        v-model="state.confirm_password"
+                        />
+                        <button
+                            type="button"
+                            aria-label="Mostrar u ocultar confirmar contraseña"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                            @click="showConfirmPassword = !showConfirmPassword"
+                        >
+                            <UIcon :name="showConfirmPassword ? 'i-heroicons-eye-slash' : 'i-heroicons-eye'" size="18" />
+                        </button>
+                    </div>
                 </UFormField>
     
                 <UButton 
@@ -95,6 +124,8 @@ import { useToast } from '@nuxt/ui/runtime/composables/useToast.js'
 const { $api } = useNuxtApp()
 
 const loading = ref(false)
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 
 // Esquema Yup
 const schema = yup.object({
@@ -112,6 +143,10 @@ const schema = yup.object({
     .matches(/^[^<>[\]{}^`]+$/, 'No se permiten los caracteres < > [ ] { } ` ^')
     .min(6, 'La contraseña debe tener al menos 6 caracteres')
     .required('Se requiere contraseña'),
+    confirm_password: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Las contraseñas deben coincidir')
+    .required('Confirma tu contraseña'),
     saving_percentage: yup
     .number()
     .min(1, "Debe ser minimo 1%")
@@ -125,6 +160,7 @@ const state = reactive({
     full_name: '',
     email: '',
     password: '',
+    confirm_password: '',
     saving_percentage: 20
 })
 
@@ -134,11 +170,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     try {
         loading.value = true
 
-        await $api.post('/api/v1/auth/register', event.data)
+        await $api.post('/api/v1/auth/register', {
+            full_name: event.data.full_name,
+            email: event.data.email,
+            password: event.data.password,
+            saving_percentage: event.data.saving_percentage,
+        })
 
         toast.add({
         title: 'Cuenta creada',
-        description: 'Ahora puedes iniciar sesión.',
+        description: 'Debes confirmar tu cuenta ahora; verifica tu correo.',
         color: 'success'
         })
 
