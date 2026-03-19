@@ -68,6 +68,7 @@ export const getCategories = async (req, res) => {
         .from("categories")
         .select("*")
         .eq("user_id", user_id)
+        .eq("isactive", true)
 
 
         if (error) {
@@ -80,6 +81,104 @@ export const getCategories = async (req, res) => {
 
         res.json({
             categories: data
+        })
+    } catch (err) {
+        console.error(err)
+
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
+// Editar categoria
+export const updateCategorie = async (req, res) => {
+    try {
+        const user_id = req.user.id
+        
+        if(!req.user){
+            return res.status(401).json({
+                message: "Usuario no autenticado"
+            });
+        }
+        
+        const { id } = req.params
+        if (!id) return res.status(400).json({ message: "Se necesita el ID de la categoría." })
+
+        const { name, type } = req.body
+
+        if (!name || !type) {
+            return res.status(400).json({
+                message: "El nombre y el tipo de categoría es obligatorio."
+            });
+        }
+
+        const {data, error} = await supabase
+        .from("categories")
+        .update([
+            {
+                user_id: user_id,
+                name,
+                type,
+            }
+        ])
+        .eq("id", id)
+        .eq("user_id", req.user.id)
+        .select()
+        .single();
+
+        if (error) {
+        console.error(error)
+
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+        }
+
+        res.json({
+            message: 'Categoría actualizada.',
+            category: data
+        })
+    } catch (err) {
+        console.error(err)
+
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}
+
+// Eliminar categoria
+export const deleteCategorie = async (req, res) => {
+    try {
+        
+        if(!req.user){
+            return res.status(401).json({
+                message: "Usuario no autenticado"
+            });
+        }
+        
+        const { id } = req.params
+        if (!id) return res.status(400).json({ message: "Se necesita el ID de la categoría." })
+
+        const {data, error} = await supabase
+        .from("categories")
+        .update({ isactive: false })
+        .eq("id", id)
+        .eq("user_id", req.user.id)
+        .select()
+        .single()
+
+        if (error) {
+        console.error(error)
+
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+        }
+
+        res.json({
+            message: "La categoría ha sido eliminada."
         })
     } catch (err) {
         console.error(err)

@@ -13,16 +13,27 @@
           <UButton
             icon="i-heroicons-plus"
             color="primary"
-            @click="open = true"
+            @click="openCreateCategory = true"
           />
 
         </UTooltip>
 
         <CreateCategoryModal
-          v-model:open="open"
+          v-model:open="openCreateCategory"
           @created="loadCategories"
         />
 
+        <UpdateCategoryModal
+          v-model:open="openUpdateModal"
+          :category="selectedCategory"
+          @updated="loadCategories"
+        />
+        
+        <DeleteCategoryModal
+          v-model:open="openDeleteModal"
+          :category="selectedCategory"
+          @deleted="loadCategories"
+        />
       </template>
     </BaseTable>
   </UContainer>
@@ -41,6 +52,9 @@ definePageMeta({
 import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
 import CreateCategoryModal from '~/components/CreateCategoryModal.vue'
+import UpdateCategoryModal from '~/components/UpdateCategoryModal.vue'
+import DeleteCategoryModal from '~/components/DeleteCategoryModal.vue'
+import type { Row } from '@tanstack/vue-table'
 
 type Category = {
   id: string
@@ -50,12 +64,17 @@ type Category = {
   created_at: string
 }
 
-const open = ref(false)
+const openCreateCategory = ref(false)
+const openUpdateModal = ref(false)
+const openDeleteModal = ref(false)
 const { $api } = useNuxtApp()
 
 const data = ref<Category[]>([])
+const selectedCategory = ref<Category | null>(null)
 const pending = ref(true)
 
+const UButton = resolveComponent('UButton')
+const UDropdownMenu = resolveComponent('UDropdownMenu')
 
 const columns: TableColumn<Category>[] = [
   {
@@ -69,8 +88,66 @@ const columns: TableColumn<Category>[] = [
   {
     accessorKey: 'name',
     header: 'Nombre'
+  },
+  {
+    id: 'actions',
+    meta: {
+      class: {
+        td: 'text-right'
+      }
+    },
+    cell: ({ row }) => {
+      return h(
+        UDropdownMenu,
+        {
+          content: {
+            align: 'end'
+          },
+          items: getRowItems(row),
+          'aria-label': 'Actions dropdown'
+        },
+        () =>
+          h(UButton, {
+            icon: 'i-lucide-ellipsis-vertical',
+            color: 'neutral',
+            variant: 'ghost',
+            'aria-label': 'Actions dropdown'
+          })
+      )
+    }
   }
 ]
+
+function getRowItems(row: Row<Category>) {
+  return [
+    {
+      type: 'label',
+      label: 'Acciones'
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Editar',
+      icon: 'i-lucide-square-pen',
+      onSelect(){
+        selectedCategory.value = row.original
+        openUpdateModal.value = true
+      }
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Eliminar',
+      icon: 'i-lucide-trash',
+      onSelect(){
+        selectedCategory.value = row.original
+        openDeleteModal.value = true
+      }
+    }
+  ]
+}
 
 const loadCategories = async () => {
   try {
