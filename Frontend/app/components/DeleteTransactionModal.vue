@@ -55,7 +55,7 @@ async function onSubmit() {
     try {
         loading.value = true
 
-        await $api.patch(`/api/v1/transactions/${props.transaction.id}`)
+        await $api.patch(`/api/v1/transactions/${props.transaction.id}/delete`)
 
         toast.add({ title: 'Transacción eliminada', description: 'Se ha eliminado correctamente.', color: 'success' })
         open.value = false

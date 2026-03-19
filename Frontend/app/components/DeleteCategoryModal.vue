@@ -59,7 +59,7 @@ async function onSubmit() {
     try {
         loading.value = true
 
-        await $api.patch(`/api/v1/categories/${props.category.id}`)
+        await $api.patch(`/api/v1/categories/${props.category.id}/delete`)
 
         toast.add({ title: 'Categoría eliminada', description: 'Se ha eliminado correctamente.', color: 'success' })
         open.value = false

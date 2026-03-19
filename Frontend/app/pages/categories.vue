@@ -22,6 +22,12 @@
           v-model:open="openCreateCategory"
           @created="loadCategories"
         />
+
+        <UpdateCategoryModal
+          v-model:open="openUpdateModal"
+          :category="selectedCategory"
+          @updated="loadCategories"
+        />
         
         <DeleteCategoryModal
           v-model:open="openDeleteModal"
@@ -46,6 +52,7 @@ definePageMeta({
 import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
 import CreateCategoryModal from '~/components/CreateCategoryModal.vue'
+import UpdateCategoryModal from '~/components/UpdateCategoryModal.vue'
 import DeleteCategoryModal from '~/components/DeleteCategoryModal.vue'
 import type { Row } from '@tanstack/vue-table'
 
@@ -58,6 +65,7 @@ type Category = {
 }
 
 const openCreateCategory = ref(false)
+const openUpdateModal = ref(false)
 const openDeleteModal = ref(false)
 const { $api } = useNuxtApp()
 
@@ -120,14 +128,19 @@ function getRowItems(row: Row<Category>) {
       type: 'separator'
     },
     {
-      label: 'Editar'
-      
+      label: 'Editar',
+      icon: 'i-lucide-square-pen',
+      onSelect(){
+        selectedCategory.value = row.original
+        openUpdateModal.value = true
+      }
     },
     {
       type: 'separator'
     },
     {
       label: 'Eliminar',
+      icon: 'i-lucide-trash',
       onSelect(){
         selectedCategory.value = row.original
         openDeleteModal.value = true

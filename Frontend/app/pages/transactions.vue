@@ -23,6 +23,12 @@
           @created="loadTransactions"
         />
         
+        <UpdateTransactionModal
+          v-model:open="openUpdateModal"
+          :transaction="selectedTransaction"
+          @updated="loadTransactions"
+        />
+
         <DeleteTransactionModal
           v-model:open="openDeleteModal"
           :transaction="selectedTransaction"
@@ -46,23 +52,25 @@ definePageMeta({
 import type { TableColumn } from '@nuxt/ui'
 import BaseTable from '~/components/BaseTable.vue'
 import CreateTransactionModal from '~/components/CreateTransactionModal.vue'
+import UpdateTransactionModal from '~/components/UpdateTransactionModal.vue'
 import DeleteTransactionModal from '~/components/DeleteTransactionModal.vue'
 import type { Row } from '@tanstack/vue-table'
 
 type Transaction = {
   id: string
-  users: {
-    name: string
-  }
-  categories: {
-    name: string
-  }
+  category_id: string
   amount: number
   description: string
+  type: "Income" | "Expense"
   transaction_date: string
+  categories: {
+    name: string
+    type: "Income" | "Expense"
+  }
 }
 
 const openCreateTransaction = ref(false)
+const openUpdateModal = ref(false)
 const openDeleteModal = ref(false)
 const { $api } = useNuxtApp()
 
@@ -147,14 +155,19 @@ function getRowItems(row: Row<Transaction>) {
       type: 'separator'
     },
     {
-      label: 'Editar'
-      
+      label: 'Editar',
+      icon: 'i-lucide-square-pen',
+      onSelect(){
+        selectedTransaction.value = row.original
+        openUpdateModal.value = true
+      }      
     },
     {
       type: 'separator'
     },
     {
       label: 'Eliminar',
+      icon: 'i-lucide-trash',
       onSelect(){
         selectedTransaction.value = row.original
         openDeleteModal.value = true
