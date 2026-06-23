@@ -145,7 +145,7 @@ export const getUserSavings = async (req, res) => {
         }
 
         res.json({
-            total_savings: data
+            total_savings: data[0] || null
         })
 
     } catch (err) {
