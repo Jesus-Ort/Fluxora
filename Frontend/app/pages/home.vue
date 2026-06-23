@@ -20,6 +20,14 @@
           <p v-else class="text-xl font-bold">{{ userBalance?.total_expense}}</p>
         </div>
       </UCard>
+
+      <UCard>
+        <div class="text-center">
+          <p class="text-sm text-gray-500">Total Ahorro</p>
+          <USkeleton v-if="pendingSavings" class="h-6 w-24 mx-auto" />
+          <p v-else class="text-xl font-bold">{{ userSavings?.total_savings}}</p>
+        </div>
+      </UCard>
     </div>
 
     <!-- Resumen mensual -->
@@ -159,9 +167,11 @@ const { $api } = useNuxtApp()
 
 // Estado
 const pendingBalance = ref(true)
+const pendingSavings = ref(true)
 const pendingMonthly = ref(true)
 const pendingCategories = ref(true)
 const userBalance = ref<any>(null)
+const userSavings = ref<any>(null)
 const monthlyRisk = ref<any>(null)
 const categoryExpenses = ref<any[]>([])
 const openTransaction = ref(false)
@@ -181,30 +191,35 @@ const riskTextClass = (status: string) => {
 // Cargar datos
 const loadDashboard = async () => {
   pendingBalance.value = true
+  pendingSavings.value = true
   pendingMonthly.value = true
   pendingCategories.value = true
 
   try {
     const balancePromise = $api.get('/api/v1/dashboard/user-balance')
+    const savingsPromise = $api.get('/api/v1/dashboard/user-savings')
     const monthlyPromise = $api.get('/api/v1/dashboard/monthly-risk')
     const categoriesPromise = $api.get('/api/v1/dashboard/category-expenses')
 
-    const [resBalance, resRisk, resExpenses] = await Promise.all([
+    const [resBalance, resRisk, resExpenses, resSaving] = await Promise.all([
       balancePromise,
       monthlyPromise,
-      categoriesPromise
+      categoriesPromise,
+      savingsPromise
     ])
 
     userBalance.value = resBalance.data.user_balance
     monthlyRisk.value = resRisk.data.monthly_risk_analysis
     categoryExpenses.value = resExpenses.data.category_expenses
-
+    userSavings.value = resSaving.data.total_savings
+    
   } catch (err) {
     console.error(err)
   } finally {
   pendingBalance.value = false
   pendingMonthly.value = false
   pendingCategories.value = false
+  pendingSavings.value = false
   }
 }
 onMounted(loadDashboard)

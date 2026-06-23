@@ -118,3 +118,41 @@ export const getUserBalance = async (req, res) => {
         })
     }
 }
+
+// Cargar total ahorrado del usuario
+export const getUserSavings = async (req, res) => {
+    try {
+        
+        if(!req.user){
+            return res.status(401).json({
+                message: "Usuario no autenticado"
+            });
+        }
+        
+        const user_id = req.user.id
+
+        const {data, error} = await supabase
+        .from("v_user_total_savings")
+        .select("*")
+        .eq("user_id", user_id)
+
+        if (error) {
+        console.error(error)
+
+        return res.status(500).json({
+            message: "Internal server error"
+        })
+        }
+
+        res.json({
+            total_savings: data
+        })
+
+    } catch (err) {
+        console.error(err)
+
+        res.status(500).json({
+            message: "Internal server error"
+        })
+    }
+}

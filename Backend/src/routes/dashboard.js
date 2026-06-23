@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getMonthlyRisk, getCategoryExpenses, getUserBalance } from "../controller/dashboardController.js";
+import { getMonthlyRisk, getCategoryExpenses, getUserBalance, getUserSavings } from "../controller/dashboardController.js";
 
 const router = Router();
 
@@ -9,5 +9,7 @@ router.get("/user-balance", getUserBalance);
 router.get("/monthly-risk", getMonthlyRisk);
 // Cargar gastos por categorias
 router.get("/category-expenses", getCategoryExpenses);
+// Cargar gastos por categorias
+router.get("/user-savings", getUserSavings);
 
 export default router;
