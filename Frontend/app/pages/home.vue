@@ -4,7 +4,7 @@
 
     <!-- Resumen total de balance del usuario -->
     <h2 class="text-2xl text-center">Balance total</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <UCard>
         <div class="text-center">
           <p class="text-sm text-gray-500">Total ingreso</p>
