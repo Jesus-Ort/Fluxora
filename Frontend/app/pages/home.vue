@@ -25,7 +25,7 @@
         <div class="text-center">
           <p class="text-sm text-gray-500">Total Ahorro</p>
           <USkeleton v-if="pendingSavings" class="h-6 w-24 mx-auto" />
-          <p v-else class="text-xl font-bold">{{ userSavings?.total_savings}}</p>
+          <p v-else class="text-xl font-bold">{{ userSavings?.total_saved}}</p>
         </div>
       </UCard>
     </div>
