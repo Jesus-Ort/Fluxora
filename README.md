@@ -603,7 +603,7 @@ GitHub: [@Jesus-Ort](https://github.com/Jesus-Ort?utm_source=chatgpt.com)
 
 ## Licencia
 
-Este proyecto utiliza la licencia especificada en el repositorio.
+Este proyecto está bajo la licencia MIT.
 
 ---
 
