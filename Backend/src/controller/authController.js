@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase.js'
+import { isValidEmail, isValidPercentage, isStringBetween } from '../utils/validators.js'
 
 // REGISTRO
 export const register = async (req, res) => {
@@ -14,11 +15,19 @@ export const register = async (req, res) => {
             return res.status(400).json({message: 'Email y Contraseña son obligatorios'});
         }
 
+        if (!isValidEmail(email)) {
+            return res.status(400).json({message: 'Correo electrónico inválido'});
+        }
+
+        if (!isStringBetween(full_name, 5, 100)) {
+            return res.status(400).json({message: 'El nombre debe tener entre 5 y 100 caracteres'});
+        }
+
         if (saving_percentage === undefined || saving_percentage === null){
             return res.status(400).json({message: 'El porcentaje es obligatorio'});
         }
 
-        if (saving_percentage < 0 || saving_percentage > 100) {
+        if (!isValidPercentage(saving_percentage)) {
             return res.status(400).json({
                 message: 'El porcentaje debe estar entre 0 y 100'
             });
@@ -30,7 +39,7 @@ export const register = async (req, res) => {
         });
 
         if (authError) {
-            return res.status(400).json({ message: authError.message, error: authError.message });
+            return res.status(400).json({ message: 'No se pudo completar el registro. Inténtalo de nuevo.' });
         }
 
         const user_id = authData.user?.id;
@@ -49,7 +58,7 @@ export const register = async (req, res) => {
         ]);
 
         if (userTableError) {
-            return res.status(400).json({message: 'Error al insertar el nuevo usuario', error: userTableError.message});
+            return res.status(400).json({message: 'No se pudo crear el perfil del usuario.'});
         }
 
         res.status(201).json({

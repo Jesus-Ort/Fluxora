@@ -21,6 +21,15 @@
             />
             </UFormField>
 
+            <UFormField label="Contraseña actual" name="currentPassword">
+            <UInput
+                v-model="state.currentPassword"
+                type="password"
+                placeholder="********"
+                class="w-full"
+            />
+            </UFormField>
+
             <div class="flex justify-end gap-2">
             <UButton
                 label="Cancelar"
@@ -52,24 +61,32 @@ const toast = useToast()
 const open = defineModel<boolean>('open')
 const loading = ref(false)
 
-const state = reactive<{ email: string }>({ email: '' })
+const state = reactive<{ email: string; currentPassword: string }>({ email: '', currentPassword: '' })
 
 const schema = yup.object({
     email: yup
     .string()
     .email('Correo electrónico no válido')
-    .required('Se requiere correo electrónico')
+    .required('Se requiere correo electrónico'),
+    currentPassword: yup
+    .string()
+    .matches(/^[^<>[\]{}^`]+$/, 'No se permiten los caracteres < > [ ] { } ` ^')
+    .required('Requerido')
     })
 
     async function onSubmit(event: FormSubmitEvent<any>) {
     try {
         loading.value = true
 
-        await $api.put('/api/v1/user/email', event.data)
+        await $api.put('/api/v1/user/email', {
+            ...event.data,
+            current_password: state.currentPassword
+        })
 
         toast.add({ title: 'Éxito', description: 'Correo actualizado', color: 'success' })
         open.value = false
         state.email = ''
+        state.currentPassword = ''
         emit('updated')
     } catch (err: any) {
         toast.add({ title: 'Error', description: err?.response?.data?.message || 'Error al actualizar', color: 'error' })

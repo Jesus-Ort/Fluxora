@@ -1,4 +1,23 @@
 import { supabase } from '../config/supabase.js'
+import {
+    isValidUUID,
+    isValidAmount,
+    isStringBetween,
+    isIn,
+    VALID_TRANSACTION_TYPES
+} from '../utils/validators.js'
+
+const categoryBelongsToUser = async (category_id, user_id) => {
+    const { data, error } = await supabase
+        .from("categories")
+        .select("id")
+        .eq("id", category_id)
+        .eq("user_id", user_id)
+        .maybeSingle()
+
+    if (error) return false
+    return !!data
+}
 
 // Crear transacción
 export const createTransaction = async (req, res) => {
@@ -16,6 +35,37 @@ export const createTransaction = async (req, res) => {
         if (!type || !category_id || !amount || !description ) {
             return res.status(400).json({
                 message: "Todos los campos son obligatorios."
+            });
+        }
+
+        if (!isIn(type, VALID_TRANSACTION_TYPES)) {
+            return res.status(400).json({
+                message: "El tipo de transacción es inválido."
+            });
+        }
+
+        if (!isValidUUID(category_id)) {
+            return res.status(400).json({
+                message: "El ID de la categoría es inválido."
+            });
+        }
+
+        if (!isValidAmount(amount)) {
+            return res.status(400).json({
+                message: "El monto debe ser un número mayor a 0 con máximo 2 decimales."
+            });
+        }
+
+        if (!isStringBetween(description, 3, 100)) {
+            return res.status(400).json({
+                message: "La descripción debe tener entre 3 y 100 caracteres."
+            });
+        }
+
+        const ownCategory = await categoryBelongsToUser(category_id, user_id)
+        if (!ownCategory) {
+            return res.status(400).json({
+                message: "La categoría no existe o no pertenece al usuario."
             });
         }
 
@@ -78,6 +128,7 @@ export const getTransactions = async (req, res) => {
         .eq("user_id", user_id)
         .eq("isactive", true)
         .eq('categories.isactive', true)
+        .eq('categories.user_id', user_id)
         .order("created_at", { ascending: false })
 
 
@@ -125,9 +176,46 @@ export const updateTransaction = async (req, res) => {
         })
         }
 
+        if (!isValidUUID(id)) {
+        return res.status(400).json({
+            message: "ID inválido"
+        })
+        }
+
         if (!category_id || !amount || !description) {
         return res.status(400).json({
             message: "Datos incompletos"
+        })
+        }
+
+        if (type !== undefined && !isIn(type, VALID_TRANSACTION_TYPES)) {
+        return res.status(400).json({
+            message: "El tipo de transacción es inválido."
+        })
+        }
+
+        if (!isValidUUID(category_id)) {
+        return res.status(400).json({
+            message: "El ID de la categoría es inválido."
+        })
+        }
+
+        if (!isValidAmount(amount)) {
+        return res.status(400).json({
+            message: "El monto debe ser un número mayor a 0 con máximo 2 decimales."
+        })
+        }
+
+        if (!isStringBetween(description, 3, 100)) {
+        return res.status(400).json({
+            message: "La descripción debe tener entre 3 y 100 caracteres."
+        })
+        }
+
+        const ownCategory = await categoryBelongsToUser(category_id, req.user.id)
+        if (!ownCategory) {
+        return res.status(400).json({
+            message: "La categoría no existe o no pertenece al usuario."
         })
         }
 
@@ -179,6 +267,7 @@ export const deleteTransaction = async (req, res) => {
         
         const { id } = req.params
         if (!id) return res.status(400).json({ message: "Se necesita el ID de la transacción." })
+        if (!isValidUUID(id)) return res.status(400).json({ message: "ID inválido." })
 
         const {data, error} = await supabase
         .from("transactions")
