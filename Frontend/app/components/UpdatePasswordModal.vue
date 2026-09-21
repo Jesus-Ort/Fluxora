@@ -12,6 +12,15 @@
             class="space-y-4"
             @submit="onSubmit"
         >
+            <UFormField label="Contraseña actual" name="currentPassword">
+            <UInput
+                v-model="state.currentPassword"
+                type="password"
+                placeholder="********"
+                class="w-full"
+            />
+            </UFormField>
+
             <UFormField label="Nueva contraseña" name="newPassword">
             <UInput
                 v-model="state.newPassword"
@@ -61,12 +70,17 @@ const toast = useToast()
 const open = defineModel<boolean>('open')
 const loading = ref(false)
 
-const state = reactive<{ newPassword: string; confirmPassword: string }>({
+const state = reactive<{ currentPassword: string; newPassword: string; confirmPassword: string }>({
+    currentPassword: '',
     newPassword: '',
     confirmPassword: ''
 })
 
 const schema = yup.object({
+    currentPassword: yup
+    .string()
+    .matches(/^[^<>[\]{}^`]+$/, 'No se permiten los caracteres < > [ ] { } ` ^')
+    .required('Requerido'),
     newPassword: yup
     .string()
     .min(6, 'Mínimo 6 caracteres')
@@ -83,10 +97,14 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     try {
         loading.value = true
 
-        await $api.put('/api/v1/user/password', { newPassword: state.newPassword })
+        await $api.put('/api/v1/user/password', {
+            newPassword: state.newPassword,
+            current_password: state.currentPassword
+        })
 
         toast.add({ title: 'Éxito', description: 'Contraseña actualizada', color: 'success' })
         open.value = false
+        state.currentPassword = ''
         state.newPassword = ''
         state.confirmPassword = ''
         emit('updated')

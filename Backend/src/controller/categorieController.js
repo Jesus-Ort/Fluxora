@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase.js'
+import { isValidUUID, isStringBetween, isIn, VALID_TRANSACTION_TYPES } from '../utils/validators.js'
 
 // Crear categoria
 export const createCategorie = async (req, res) => {
@@ -19,12 +20,24 @@ export const createCategorie = async (req, res) => {
             });
         }
 
+        if (!isStringBetween(name, 1, 100)) {
+            return res.status(400).json({
+                message: "El nombre debe tener entre 1 y 100 caracteres."
+            });
+        }
+
+        if (!isIn(type, VALID_TRANSACTION_TYPES)) {
+            return res.status(400).json({
+                message: "El tipo de categoría es inválido."
+            });
+        }
+
         const {data, error} = await supabase
         .from("categories")
         .insert([
             {
                 user_id: user_id,
-                name,
+                name: name.trim(),
                 type,
             }
         ])
@@ -104,6 +117,7 @@ export const updateCategorie = async (req, res) => {
         
         const { id } = req.params
         if (!id) return res.status(400).json({ message: "Se necesita el ID de la categoría." })
+        if (!isValidUUID(id)) return res.status(400).json({ message: "ID inválido." })
 
         const { name, type } = req.body
 
@@ -113,15 +127,25 @@ export const updateCategorie = async (req, res) => {
             });
         }
 
+        if (!isStringBetween(name, 1, 100)) {
+            return res.status(400).json({
+                message: "El nombre debe tener entre 1 y 100 caracteres."
+            });
+        }
+
+        if (!isIn(type, VALID_TRANSACTION_TYPES)) {
+            return res.status(400).json({
+                message: "El tipo de categoría es inválido."
+            });
+        }
+
         const {data, error} = await supabase
         .from("categories")
-        .update([
-            {
-                user_id: user_id,
-                name,
-                type,
-            }
-        ])
+        .update({
+            user_id: user_id,
+            name: name.trim(),
+            type,
+        })
         .eq("id", id)
         .eq("user_id", req.user.id)
         .select()
@@ -160,6 +184,7 @@ export const deleteCategorie = async (req, res) => {
         
         const { id } = req.params
         if (!id) return res.status(400).json({ message: "Se necesita el ID de la categoría." })
+        if (!isValidUUID(id)) return res.status(400).json({ message: "ID inválido." })
 
         const {data, error} = await supabase
         .from("categories")
